@@ -1,6 +1,7 @@
 {
     "name": "miroai-backend",
     "version": "1.0.0",
+    "type": "module",
     "main": "api/index.js",
     "engines": {
         "node": "24.x"
