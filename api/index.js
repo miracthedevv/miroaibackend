@@ -92,15 +92,23 @@ Düşüncelerini <think>...</think> içine yaz.`;
         dinamikPrompt += `\n\n[Sistem Anlık Zaman Bilgisi]: Tarih: ${tarih}, Saat: ${saat} . Kullanıcı yıl/ay/gün/saat ile ilgili birşey sormadığı sürece bu bilgileri kullanmana gerek yok.`;
     }
 
-    const nvidiaPayload = {
-        model: 'qwen/qwen3.5-122b-a10b',
-        messages: titleMode 
-            ? [{ role: 'system', content: '4 kelimelik başlık üret.' }, { role: 'user', content: messages[0]?.content || '' }]
-            : [{ role: 'system', content: dinamikPrompt }, ...messages],
-        max_tokens: titleMode ? 30 : 6096,
-        temperature: 0.5,
-        extra_body: titleMode ? {} : { thinking: { type: 'enabled' } }
-    };
+    const nvidiaPayload = titleMode ? {
+    model: 'qwen/qwen3.5-122b-a10b',
+    messages: [
+        { role: 'system', content: 'Kısa başlık üret.' },
+        { role: 'user', content: messages[0]?.content || '' }
+    ],
+    max_tokens: 30
+} : {
+    model: 'qwen/qwen3.5-122b-a10b',
+    messages: [{ role: 'system', content: dinamikPrompt }, ...messages],
+    max_tokens: 8192, 
+    temperature: 0.6,
+    extra_body: {
+        thinking_budget: 512, 
+        reasoning: true
+    }
+};
 
     try {
         const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
@@ -112,7 +120,7 @@ Düşüncelerini <think>...</think> içine yaz.`;
             body: JSON.stringify(nvidiaPayload)
         });
 
-        const finalData = await response.json(); // "result" değil, çakışma bitti.
+        const finalData = await response.json();
 
         if (finalData.choices && finalData.choices[0].message) {
             const msg = finalData.choices[0].message;
