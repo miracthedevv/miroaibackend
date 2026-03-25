@@ -104,16 +104,15 @@ Düşüncelerini <think>...</think> içine yaz.`;
     } : {
         model: 'qwen/qwen3.5-122b-a10b',
         messages: [{ role: 'system', content: dinamikPrompt }, ...messages],
-        max_tokens: 6096,
+        max_tokens: 8192,
         temperature: 0.5,
         top_p: 0.95,
         top_k: 20,
         presence_penalty: 0,
         repetition_penalty: 1,
-        // İŞTE PHP'DEKİ O KRİTİK AYARLAR BURASI:
         chat_template_kwargs: {
             enable_thinking: true,
-            thinking_budget: 400
+            thinking_budget: 428
         },
         extra_body: { 
             thinking: { type: 'enabled' } 
