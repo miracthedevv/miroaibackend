@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     // GİZLİ BİLGİLER
     const NVIDIA_API_KEY = process.env.NVIDIA_APIKEY;    
     const TAVILY_API_KEY = process.env.TVLY_APIKEY;
-    const SYSTEM_PROMPT = `Adın Miro AI`;
+    const SYSTEM_PROMPT = "Adın Miro AI";
 
     const body = req.body;
     if (!body) return res.status(400).json({ error: 'Geçersiz JSON.' });
