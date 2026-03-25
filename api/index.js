@@ -93,23 +93,32 @@ Düşüncelerini <think>...</think> içine yaz.`;
     }
 
     const nvidiaPayload = titleMode ? {
-    model: 'qwen/qwen3.5-122b-a10b',
-    messages: [
-        { role: 'system', content: 'Kısa başlık üret.' },
-        { role: 'user', content: messages[0]?.content || '' }
-    ],
-    max_tokens: 30
-} : {
-    model: 'qwen/qwen3.5-122b-a10b',
-    messages: [{ role: 'system', content: dinamikPrompt }, ...messages],
-    max_tokens: 8192, 
-    temperature: 0.6,
-    extra_body: {
-        thinking_budget: 512, 
-        reasoning: true
-    }
-};
-
+        model: 'qwen/qwen3.5-122b-a10b',
+        messages: [
+            { role: 'system', content: 'Aşağıdaki mesaj için maksimum 4 kelimelik, kısa ve öz bir sohbet başlığı üret. Sadece başlığı yaz, başka hiçbir şey yazma, tırnak işareti kullanma.' },
+            { role: 'user', content: messages[0]?.content || '' }
+        ],
+        max_tokens: 30,
+        temperature: 0.3,
+        chat_template_kwargs: { enable_thinking: false } // Başlıkta düşünmesin
+    } : {
+        model: 'qwen/qwen3.5-122b-a10b',
+        messages: [{ role: 'system', content: dinamikPrompt }, ...messages],
+        max_tokens: 6096,
+        temperature: 0.5,
+        top_p: 0.95,
+        top_k: 20,
+        presence_penalty: 0,
+        repetition_penalty: 1,
+        // İŞTE PHP'DEKİ O KRİTİK AYARLAR BURASI:
+        chat_template_kwargs: {
+            enable_thinking: true,
+            thinking_budget: 400
+        },
+        extra_body: { 
+            thinking: { type: 'enabled' } 
+        }
+    };
     try {
         const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
             method: 'POST',
