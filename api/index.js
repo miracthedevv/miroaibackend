@@ -14,9 +14,8 @@ export default async function handler(req, res) {
     }
 
     // GİZLİ BİLGİLER
-    const NVIDIA_API_KEY = "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";
-    const TAVILY_API_KEY = "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";
-
+    const NVIDIA_API_KEY = process.env.NVIDIA_APIKEY;    
+    const TAVILY_API_KEY = process.env.TVLY_APIKEY;
     const SYSTEM_PROMPT = `Senin adın "Miro AI". miracthedev tarafından geliştirilen; 
 kullanıcı dostu, eğlenceli ve her konuda uzman bir yapay zekasın.
 
