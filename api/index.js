@@ -131,6 +131,16 @@ Düşüncelerini <think>...</think> içine yaz.`;
             body: JSON.stringify(nvidiaPayload)
         });
 
+        // NVIDIA'dan gelen ham yanıtı alalım
+        const result = await nvidiaRes.json();
+
+        // Eğer NVIDIA hata döndürdüyse (403, 401 vb.)
+        if (!nvidiaRes.ok) {
+            return res.status(nvidiaRes.status).json({ 
+                error: "NVIDIA Hatası", 
+                detail: result 
+            });
+        }
         const result = await nvidiaRes.json();
 
         // PHP'deki düşünce (<think>) birleştirme mantığı
