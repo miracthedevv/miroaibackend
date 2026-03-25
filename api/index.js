@@ -34,7 +34,7 @@ export default async function handler(req, res) {
                 body: JSON.stringify({
                     api_key: TAVILY_API_KEY,
                     query: query,
-                    max_results: 5,
+                    max_nvidiaDatas: 5,
                     search_depth: 'basic',
                     include_answer: true
                 })
@@ -81,28 +81,27 @@ export default async function handler(req, res) {
         });
 
         // NVIDIA'dan gelen ham yanıtı alalım
-        const result = await nvidiaRes.json();
-
+        const nvidiaData = await nvidiaRes.json();
         // Eğer NVIDIA hata döndürdüyse (403, 401 vb.)
         if (!nvidiaRes.ok) {
             return res.status(nvidiaRes.status).json({ 
                 error: "NVIDIA Hatası", 
-                detail: result 
+                detail: nvidiaData 
             });
         }
-        const result = await nvidiaRes.json();
+        const nvidiaData = await nvidiaRes.json();
 
         // PHP'deki düşünce (<think>) birleştirme mantığı
-        if (result.choices && result.choices[0].message) {
-            const msg = result.choices[0].message;
+        if (nvidiaData.choices && nvidiaData.choices[0].message) {
+            const msg = nvidiaData.choices[0].message;
             const reasoning = msg.reasoning_content || msg.reasoning || '';
             const content = msg.content || '';
             if (reasoning) {
-                result.choices[0].message.content = `<think>\n${reasoning}\n</think>\n\n${content}`;
+                nvidiaData.choices[0].message.content = `<think>\n${reasoning}\n</think>\n\n${content}`;
             }
         }
 
-        return res.status(200).json(result);
+        return res.status(200).json(nvidiaData);
     } catch (err) {
         return res.status(502).json({ error: "AI Sağlayıcısı hatası" });
     }
