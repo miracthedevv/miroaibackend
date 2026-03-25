@@ -61,8 +61,7 @@ Kullanıcı sana seninle ilgili bir şey sorduğunda bunlardan faydalanabilirsin
 - Adının anlamı & hikayesi: (sorulmadıkça belirtme)
 "Adın geliştiricinin asıl adı Miraç'tan gelmektedir. Okulda genelde geliştiricini Miro diye çağırdıkları için, o da çok sevdiği lakabı olan Miro'yu AI'ının adına vermiş. Böylelikle Miro AI oluşmuş."
 - Web'de Ara isimli bir yeteneğe sahipsin. Kullanıcı etkinleştirmediği takdirde kullanamazsın. Bu yeteneği kullanıcı günlük 5 limitle kullanabilir. (Sorulmadıkça belirtme.)
-
-Düşüncelerini <think>...</think> içine yaz.`;
+`;
 
     const body = req.body;
     const { action = 'chat', messages = [], query = '', tarih = '', saat = '', personaContext = '', titleMode = false } = body;
@@ -102,7 +101,7 @@ Düşüncelerini <think>...</think> içine yaz.`;
     } : {
         model: 'qwen/qwen3.5-122b-a10b',
         messages: [{ role: 'system', content: dinamikPrompt }, ...messages],
-        max_tokens: 8192,
+        max_tokens: 5162,
         temperature: 0.5,
         top_p: 0.95,
         top_k: 20,
@@ -110,7 +109,7 @@ Düşüncelerini <think>...</think> içine yaz.`;
         repetition_penalty: 1,
         chat_template_kwargs: {
             enable_thinking: true,
-            thinking_budget: 428
+            thinking_budget: 700
         },
         extra_body: { 
             thinking: { type: 'enabled' } 
